@@ -1,8 +1,3 @@
-Here is a professional, ready-to-use `README.md` for your new Gold Bot repository. It includes all the features we discussed, setup instructions, and the Render deployment guide.
-
-Copy the text inside the box below and paste it into your `README.md` file on GitHub:
-
-```markdown
 # 🌟 Gold Price Bot (Discord & Telegram)
 
 A Python-based bot that tracks and reports live gold prices (Vietnamese SJC & World). The bot runs concurrently on both Discord and Telegram, and is optimized for free 24/7 cloud hosting.
