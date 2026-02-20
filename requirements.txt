@@ -1,7 +1,5 @@
-discord.py
-python-telegram-bot
-python-dotenv
 requests
 beautifulsoup4
 apscheduler
 flask
+python-dotenv
