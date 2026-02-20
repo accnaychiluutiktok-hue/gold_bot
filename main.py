@@ -12,7 +12,7 @@ load_dotenv()
 def send_discord_webhook(data):
     webhook_url = os.getenv('discord_webhook')
     if not webhook_url:
-        print("⚠️ discord_webhook not found.")
+        print("⚠️ discord_webhook not found in environment.")
         return
 
     # Format the message for Discord
@@ -20,9 +20,9 @@ def send_discord_webhook(data):
         "title": "🌟 Bảng Giá Vàng (Gold Price)",
         "color": 16766720, # Gold color hex
         "fields": [
-            {"name": "🌍 Thế giới (World)", "value": f"${data['world_price']} USD/oz", "inline": False},
-            {"name": "🇻🇳 SJC Mua (Buy)", "value": f"{data['sjc_buy']} VND", "inline": True},
-            {"name": "🇻🇳 SJC Bán (Sell)", "value": f"{data['sjc_sell']} VND", "inline": True}
+            {"name": "🌍 Thế giới (World)", "value": f"${data.get('world_price', 'N/A')} USD/oz", "inline": False},
+            {"name": "🇻🇳 SJC Mua (Buy)", "value": f"{data.get('sjc_buy', 'N/A')} VND", "inline": True},
+            {"name": "🇻🇳 SJC Bán (Sell)", "value": f"{data.get('sjc_sell', 'N/A')} VND", "inline": True}
         ],
         "footer": {"text": "Nguồn: tygia.com"}
     }
@@ -39,16 +39,16 @@ def send_telegram_message(data):
     chat_id = os.getenv('TELEGRAM_CHAT_ID')
     
     if not token or not chat_id:
-        print("⚠️ TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not found.")
+        print("⚠️ TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not found in environment.")
         return
 
     # Format the message for Telegram
     msg = (
         f"🌟 *CẬP NHẬT GIÁ VÀNG* 🌟\n\n"
-        f"🌍 *World:* ${data['world_price']} USD/oz\n"
+        f"🌍 *World:* ${data.get('world_price', 'N/A')} USD/oz\n"
         f"-----------------\n"
-        f"🇻🇳 *SJC Mua:* {data['sjc_buy']} VND\n"
-        f"🇻🇳 *SJC Bán:* {data['sjc_sell']} VND\n"
+        f"🇻🇳 *SJC Mua:* {data.get('sjc_buy', 'N/A')} VND\n"
+        f"🇻🇳 *SJC Bán:* {data.get('sjc_sell', 'N/A')} VND\n"
     )
     
     # Send to Telegram
@@ -59,36 +59,4 @@ def send_telegram_message(data):
         "parse_mode": "Markdown"
     }
     
-    response = requests.post(url, json=payload)
-    if response.status_code == 200:
-        print("✅ Sent alert to Telegram!")
-    else:
-        print(f"❌ Failed to send to Telegram: {response.text}")
-
-def run_alerts():
-    print("Fetching new gold prices...")
-    data = get_gold_prices()
-    send_discord_webhook(data)
-    send_telegram_message(data)
-
-if __name__ == "__main__":
-    # 1. Start the web server to keep Render awake
-    keep_alive()
-    
-    # 2. Run the alert once immediately when the bot starts
-    run_alerts()
-
-    # 3. Schedule the bot to run every X minutes
-    # Currently set to 60 minutes. You can change this number!
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(run_alerts, 'interval', minutes=60)
-    scheduler.start()
-    
-    print("🚀 Auto-Alert Scheduler started. Press Ctrl+C to exit.")
-    
-    # Keep the script running
-    try:
-        while True:
-            time.sleep(2)
-    except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()
+    response = requests.post(url, json=pay
